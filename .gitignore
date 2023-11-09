@@ -2,4 +2,5 @@
 *.pyo
 *.egg-info
 .idea
+build
 deps

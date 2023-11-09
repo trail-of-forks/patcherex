@@ -81,7 +81,7 @@ class DetourBackendArm(DetourBackendElf):
         all_code = ""
         for p in relevant_patches:
             if isinstance(p, InsertCodePatch):
-                code = p.code
+                code = p.code(0) # TODO(Ian): this is pretty sketchy but we dont care about the address yet
             else:
                 code = p.asm_code
             all_code += "\n" + code + "\n"
@@ -384,8 +384,10 @@ class DetourBackendArm(DetourBackendElf):
         injected_code += "\n".join([self.capstone_to_asm(i)
                                     for i in classified_instructions
                                     if i.overwritten == 'pre'])
+        
+        patch_code_offset = self.get_current_code_position() + sum([len(i.bytes) for i in classified_instructions if i.overwritten == 'pre'])
         injected_code += "\n"
-        injected_code += patch_code + "\n"
+        injected_code += patch_code(patch_code_offset) + "\n"
         injected_code += "\n".join([self.capstone_to_asm(i)
                                     for i in classified_instructions
                                     if i.overwritten == 'culprit'])

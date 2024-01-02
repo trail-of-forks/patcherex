@@ -387,7 +387,7 @@ class DetourBackendArm(DetourBackendElf):
         
         patch_code_offset = self.get_current_code_position() + sum([len(i.bytes) for i in classified_instructions if i.overwritten == 'pre'])
         injected_code += "\n"
-        injected_code += patch_code(patch_code_offset) + "\n"
+        injected_code += patch_code(patch_code_offset, is_thumb=is_thumb) + "\n"
         injected_code += "\n".join([self.capstone_to_asm(i)
                                     for i in classified_instructions
                                     if i.overwritten == 'culprit'])

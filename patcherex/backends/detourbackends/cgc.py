@@ -895,7 +895,7 @@ class DetourBackendCgc(Backend):
         if len(movable_instructions) == 0:
             raise DetourException("No movable instructions found")
         detour_pos = self.find_detour_pos(block, detour_size, patch.addr)
-        detour_overwritten_bytes = range(detour_pos, detour_pos+detour_size)
+        detour_overwritten_bytes = range(detour_pos, max(detour_pos+detour_size, patch.addr))
 
         for i in movable_instructions:
             if len(set(detour_overwritten_bytes).intersection(set(range(i.address, i.address+len(i.bytes))))) > 0:
